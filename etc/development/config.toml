@@ -1,0 +1,8 @@
+debug = true
+
+[database]
+host = "127.0.0.1"
+port = 5432
+user = "test"
+password = ""
+name = "edu"

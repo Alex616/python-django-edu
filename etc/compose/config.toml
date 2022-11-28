@@ -1,0 +1,8 @@
+debug = true
+
+[database]
+host = "postgres_edu"
+port = 5432
+user = "test"
+password = ""
+name = "edu"

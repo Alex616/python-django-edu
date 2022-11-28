@@ -1,0 +1,7 @@
+__pycache__
+*.pyc
+*.egg-info/
+*.sqlite3
+settings/local_k8s_dev.py
+.coverage
+/static

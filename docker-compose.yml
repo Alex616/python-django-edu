@@ -1,0 +1,51 @@
+version: '3.4'
+
+x-edu:
+  &edu
+  working_dir: /opt/app
+  image: edu
+  build: .
+  container_name: edu_app
+  environment:
+  - CONFIG_PATH=/opt/app/etc/compose/config.toml
+  networks:
+  - default
+
+
+services:
+  postgres_edu:
+    image: postgres:14.5
+    container_name: postgres_edu
+    ports:
+    - 5432:5432
+    environment:
+    - POSTGRES_DB=edu
+    - POSTGRES_USER=test
+    - POSTGRES_HOST_AUTH_METHOD=trust
+    networks:
+    - default
+
+  edu_app:
+    <<: *edu
+    container_name: edu_app
+    entrypoint:
+      scripts/wait-for-it.sh postgres_edu:5432 --strict --timeout=180 -- scripts/local_run.sh
+    ports:
+    - 8000:8000
+    depends_on:
+    - postgres_edu
+
+  edu_test_debug:
+    <<: *edu
+    container_name: edu_test
+    entrypoint:
+      scripts/wait-for-it.sh postgres_edu:5432 --strict --timeout=180 -- /opt/app/api/manage.py runserver
+    ports:
+    - 8000:8000
+    volumes:
+    - ".:/opt/app"
+    depends_on:
+    - postgres_edu
+
+networks:
+  default: {}
